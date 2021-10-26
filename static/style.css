@@ -298,6 +298,10 @@ html, body {
 	display: block;
 }
 
+.prod_img{
+	height: -webkit-fill-available;
+}
+
 .promo-content-1 {
 	background-image: url(img/promo-img1.jpg);
 	width: 683px;
