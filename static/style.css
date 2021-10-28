@@ -265,6 +265,9 @@ html, body {
 	height: 270px;
 	width: 270px;
 	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .tab-content a .text {
 	display: none;
@@ -272,10 +275,11 @@ html, body {
 	width: 268px;
 	background-color: #ffffff;
     opacity: 0.9;
-    position: absolute;
-    top: 0;
-    text-align: center;
-    border: 1px solid #9c9c9c;
+	position: absolute;
+	top: 0;
+	left: 0;
+	text-align: center;
+	border: 1px solid #9c9c9c;
 }
 .tab-content a .text h4 {
 	color:  #212121;
@@ -299,7 +303,8 @@ html, body {
 }
 
 .prod_img{
-	height: -webkit-fill-available;
+	max-width: 268px;
+	max-height: 268px;
 }
 
 .promo-content-1 {
@@ -1073,4 +1078,9 @@ td:first-child {
 }
 .related-products a:hover .text{
 	display: block;
+}
+
+.login {
+	max-width: 40%;
+	margin: 20px auto;
 }

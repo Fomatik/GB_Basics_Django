@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 from mainapp.models import Product, ProductCategory
 
 
@@ -7,7 +8,7 @@ from mainapp.models import Product, ProductCategory
 def main(request):
     context = {
         'title': 'главная',
-        'products': Product.objects.all()[:4]
+        'products': Product.objects.all().order_by('?')[:4]
     }
     return render(request, 'mainapp/index.html', context=context)
 
