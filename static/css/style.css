@@ -726,8 +726,10 @@ html, body {
 
 .basket span {
 	display: block;
-    margin-left: 30px;
-    width: 150px;
+	margin-left: 10px;
+	width: 150px;
+	font-size: medium;
+	font-weight: 500;
 }
 
 .clearfix:after {
@@ -1348,11 +1350,15 @@ td:first-child {
 	text-align: left;
 	margin-top: 142px;
 	text-transform: uppercase;
-	/*text-transform: capitalize;*/
+	/* text-transform: capitalize; */
+	text-align: center;
+	margin-left: 2em;
 }
 
 .location {
-	padding: 0px 97px;
+	/* padding: 0px 97px; */
+	display: flex;
+	justify-content: space-around;
 }
 .location-1 {
 	height: 368px;
@@ -1674,6 +1680,7 @@ td:first-child {
 }
 .related-products {
 	margin-bottom: 120px;
+	display: flex;
 }
 .related-products .block a img {
 	float: left;

@@ -8,6 +8,10 @@ def login(request):
     title = 'вход'
 
     login_form = ShopUserLoginForm(data=request.POST)
+
+    next_param = request.GET.get('next', '')
+    print(next_param)
+
     if request.method == 'POST' and login_form.is_valid():
         username = request.POST['username']
         password = request.POST['password']
@@ -15,10 +19,16 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
             auth.login(request, user)
+            if 'next' in request.POST.keys():
+                return HttpResponseRedirect(request.POST['next'])
             return HttpResponseRedirect(reverse('main'))
 
-    content = {'title': title, 'login_form': login_form}
-    return render(request, 'authapp/login.html', content)
+    context = {
+        'title': title,
+        'login_form': login_form,
+        'next': next_param,
+    }
+    return render(request, 'authapp/login.html', context)
 
 
 def logout(request):
@@ -38,9 +48,9 @@ def register(request):
     else:
         register_form = ShopUserRegisterForm()
 
-    content = {'title': title, 'register_form': register_form}
+    context = {'title': title, 'register_form': register_form}
 
-    return render(request, 'authapp/register.html', content)
+    return render(request, 'authapp/register.html', context)
 
 
 def edit(request):
@@ -54,6 +64,6 @@ def edit(request):
     else:
         edit_form = ShopUserEditForm(instance=request.user)
 
-    content = {'title': title, 'edit_form': edit_form}
+    context = {'title': title, 'edit_form': edit_form}
 
-    return render(request, 'authapp/edit.html', content)
+    return render(request, 'authapp/edit.html', context)

@@ -7,8 +7,21 @@ from mainapp.models import Product, ProductCategory
 
 def get_basket(user):
     if user.is_authenticated:
-        return sum(list(Basket.objects.filter(user=user).values_list('quantity', flat=True)))
-    return 0
+        return Basket.objects.filter(user=user)
+    else:
+        return []
+
+
+def get_hot_product():
+    products = Product.objects.all()
+
+    return random.sample(list(products), 1)[0]
+
+
+def get_same_products(hot_product):
+    same_products = Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk)[:3]
+
+    return same_products
 
 
 def main(request):
@@ -32,6 +45,7 @@ def products(request, pk=None):
 
     links_menu = ProductCategory.objects.all()
     title = 'продукты'
+    basket = get_basket(request.user)
 
     if pk is not None:
         if pk == 0:
@@ -49,20 +63,33 @@ def products(request, pk=None):
             'title': title,
             'category': category_item,
             'products': products_list,
-            'basket': get_basket(request.user),
+            'basket': basket,
         }
 
         return render(request, 'mainapp/products_list.html', context=context)
 
-    hot_products = random.sample(list(Product.objects.all()), 1)[0]
-    same_products = Product.objects.all()[3:6]
+    hot_products = get_hot_product()
+    same_products = get_same_products(hot_products)
 
     context = {
         'title': title,
         'links_menu': links_menu,
         'hot_products': hot_products,
         'same_products': same_products,
-        'basket': get_basket(request.user),
+        'basket': basket,
     }
 
     return render(request, 'mainapp/products.html', context=context)
+
+
+def product(request, pk):
+    title = 'продукты'
+
+    content = {
+        'title': title,
+        'links_menu': ProductCategory.objects.all(),
+        'product': get_object_or_404(Product, pk=pk),
+        'basket': get_basket(request.user),
+    }
+
+    return render(request, 'mainapp/product.html', content)
