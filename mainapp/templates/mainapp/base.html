@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{% block title %}{{ title|title }}{% endblock %}</title>
+    <title>{% block title %}{{ title.name|title }}{% endblock %}</title>
     {% block style %}
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
