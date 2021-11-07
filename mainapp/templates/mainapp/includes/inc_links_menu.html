@@ -1,18 +1,21 @@
-<li>
-    <a href="{% url 'products:products' %}"
-            {% if request.resolver_match.url_name == 'products' %}
-       class="active"
-            {% endif %}>
-        все
-    </a>
-</li>
-{% for links_item in links_menu %}
+<ul class="links-menu">
     <li>
-        <a href="{% url 'products:category' links_item.pk %}"
-                {% if request.resolver_match.kwargs.pk == links_item.pk %}
+        <a href="{% url 'products:category' 0 %}"
+                {% if request.resolver_match.kwargs.pk == 0 %}
            class="active"
                 {% endif %}>
-            {{ links_item.name }}
+            все
         </a>
     </li>
-{% endfor %}
+    {% for links_item in links_menu %}
+        <li>
+            <a href="{% url 'products:category' links_item.pk %}"
+                    {% if request.resolver_match.kwargs.pk == links_item.pk %}
+               class="active"
+                    {% endif %}>
+                {{ links_item.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
