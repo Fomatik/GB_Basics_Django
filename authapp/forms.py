@@ -62,6 +62,6 @@ class ShopUserEditForm(UserChangeForm):
 
     def clean_email(self):
         email = self.cleaned_data['email'].strip()
-        if ShopUser.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError("Эта почта занята!")
+        if ShopUser.objects.exclude(pk=self.instance.pk).filter(email__iexact=email).exists():
+            raise forms.ValidationError("Пользователь с такой почтой уже существует!")
         return email
