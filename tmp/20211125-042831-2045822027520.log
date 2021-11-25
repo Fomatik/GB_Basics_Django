@@ -1,0 +1,11 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Account activation
+From: django@gb.local
+To: django1@geekshop.local
+Date: Thu, 25 Nov 2021 01:28:31 -0000
+Message-ID: <163780371199.6088.3515128334808680446@Fomatik-Note>
+
+Your activation url: http://localhost:8000/auth/verify/django1@geekshop.local/f86366759d41ce988c01df3a8aa58992d4460143
+-------------------------------------------------------------------------------

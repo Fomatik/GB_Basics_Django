@@ -8,13 +8,6 @@ from basketapp.models import Basket
 from mainapp.models import Product, ProductCategory
 
 
-def get_basket(user):
-    if user.is_authenticated:
-        return Basket.objects.filter(user=user)
-    else:
-        return []
-
-
 def get_hot_product():
     hot_products = Product.objects.all()
     return random.sample(list(hot_products), 1)[0]
@@ -35,7 +28,6 @@ class MainView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['basket'] = get_basket(self.request.user)
         context['title'] = 'Главная'
         return context
 
@@ -55,7 +47,6 @@ class ContactView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Контакты'
-        context['basket'] = get_basket(self.request.user)
         return context
 
 
@@ -77,7 +68,6 @@ class ProductsView(ListView):
         context['links_menu'] = ProductCategory.objects.all()
         context['hot_products'] = get_hot_product()
         context['same_products'] = get_same_products(get_hot_product())
-        context['basket'] = get_basket(self.request.user)
         return context
 
 
@@ -97,7 +87,6 @@ class ProductsFromCategoryView(ListView):
         context['title'] = context['category']
         context['links_menu'] = ProductCategory.objects.all()
         context['products'] = self.get_queryset()
-        context['basket'] = get_basket(self.request.user)
         return context
 
 # def products(request, pk=None):
@@ -159,7 +148,6 @@ class ProductView(DetailView):
         context['title'] = Product.name
         context['links_menu'] = ProductCategory.objects.all()
         context['product'] = Product.objects.all().filter(pk=self.kwargs['pk'])
-        context['basket'] = get_basket(self.request.user)
         return context
 
 

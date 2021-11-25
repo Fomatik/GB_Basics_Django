@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import CreateView, UpdateView
 
@@ -9,6 +10,7 @@ from django.contrib import auth
 from django.urls import reverse, reverse_lazy
 
 from authapp.models import ShopUser
+from authapp.services import send_verify_email
 
 
 class UserLoginView(LoginView):
@@ -61,6 +63,11 @@ class UserRegisterView(SuccessMessageMixin, CreateView):
     success_message = "Your profile was created successfully"
     extra_context = {'title': 'регистрация'}
 
+    def form_valid(self, form):
+        new_user = form.save()
+        send_verify_email(new_user)
+        return super(UserRegisterView, self).form_valid(form)
+
 
 # def register(request):
 #     title = 'регистрация'
@@ -104,3 +111,12 @@ class UserProfileEditView(UpdateView):
 #     context = {'title': title, 'edit_form': edit_form}
 #
 #     return render(request, 'authapp/edit.html', context)
+
+
+def verify(request, email, key):
+    user = ShopUser.objects.filter(email=email).first()
+    if user:
+        if user.activate_key == key and not user.is_activate_key_expired():
+            user.activate_user()
+            auth.login(request, user)
+    return render(request, 'authapp/register-result.html')
