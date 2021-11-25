@@ -17,6 +17,8 @@ class ShopUserLoginForm(AuthenticationForm):
 
 
 class ShopUserRegisterForm(UserCreationForm):
+    email = forms.EmailField()
+
     class Meta:
         model = ShopUser
         fields = ('username', 'first_name', 'password1', 'password2', 'email', 'age', 'avatar')
