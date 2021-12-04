@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.contrib.auth.forms import forms
 
-from authapp.models import ShopUser
+from authapp.models import ShopUser, ShopUserProfile
 
 
 class ShopUserLoginForm(AuthenticationForm):
@@ -59,7 +59,7 @@ class ShopUserRegisterForm(UserCreationForm):
 class ShopUserEditForm(UserChangeForm):
     class Meta:
         model = ShopUser
-        fields = ('username', 'first_name', 'email', 'age', 'avatar', 'password')
+        fields = ('username', 'first_name', 'last_name', 'email', 'age', 'avatar', 'password')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -81,3 +81,16 @@ class ShopUserEditForm(UserChangeForm):
         if ShopUser.objects.exclude(pk=self.instance.pk).filter(email__iexact=email).exists():
             raise forms.ValidationError("Пользователь с такой почтой уже существует!")
         return email
+
+
+class ShopUserProfileEditForm(forms.ModelForm):
+
+    class Meta:
+        model = ShopUserProfile
+        exclude = ('user',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            field.help_text = ''
