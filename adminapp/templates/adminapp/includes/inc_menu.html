@@ -18,10 +18,8 @@
                 active
            {% endif %}">
             категории
-            {% if category %}
-                :<span>{{ category.name }}</span>
-            {% elif user %}
-                :<span>{{ users.name }}</span>
+            {% if category.name %}
+                :<span> {{ category.name }}</span>
             {% endif %}
         </a>
     </li>

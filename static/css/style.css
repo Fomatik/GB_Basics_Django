@@ -1206,9 +1206,9 @@ html, body {
 }
 .text-footer p {
 	color:  #212121;
-	font-size: 14px;/* Приближение из-за подстановки шрифтов */
+	font-size: 14px;/* ÐŸÑ€Ð¸Ð±Ð»Ð¸Ð¶ÐµÐ½Ð¸Ðµ Ð¸Ð·-Ð·Ð° Ð¿Ð¾Ð´ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ¸ ÑˆÑ€Ð¸Ñ„Ñ‚Ð¾Ð² */
 	font-weight: 300;
-	line-height: 24px;/* Приближение из-за подстановки шрифтов */
+	line-height: 24px;/* ÐŸÑ€Ð¸Ð±Ð»Ð¸Ð¶ÐµÐ½Ð¸Ðµ Ð¸Ð·-Ð·Ð° Ð¿Ð¾Ð´ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ¸ ÑˆÑ€Ð¸Ñ„Ñ‚Ð¾Ð² */
 	text-align: left;
 	margin-bottom: 20px;
 }
@@ -1233,7 +1233,7 @@ table {
 	width: 100%;
 }
 td:first-child {
-	width: 235px;
+	width: 250px;
 }
 
 .text-footer:nth-child(2) {
