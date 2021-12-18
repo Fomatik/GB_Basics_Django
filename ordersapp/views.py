@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.db.models.signals import pre_save, pre_delete
+from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -37,6 +39,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
+                    form.initial['price'] = basket_items[num].product.price
             else:
                 formset = OrderFormSet()
         context['orderitems'] = formset
@@ -72,6 +75,9 @@ class OrderUpdateView(LoginRequiredMixin, UpdateView):
             formset = OrderFormSet(self.request.POST, instance=self.object)
         else:
             formset = OrderFormSet(instance=self.object)
+            for form in formset.forms:
+                if form.instance.pk:
+                    form.initial['price'] = form.instance.product.price
         context['orderitems'] = formset
         return context
 
@@ -80,6 +86,7 @@ class OrderUpdateView(LoginRequiredMixin, UpdateView):
         orderitems = context['orderitems']
 
         with transaction.atomic():
+            Basket.objects.filter(user=self.request.user).delete()
             self.object = form.save()
             if orderitems.is_valid():
                 orderitems.instance = self.object
@@ -101,11 +108,25 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
 
 
 def order_forming_complete(request, pk):
-    order = get_object_or_404(Order, pk=pk)
+    order = Order.objects.get(pk=pk)
     order.status = Order.STATUS_SEND_TO_PROCEED
     order.save()
-    if order.status == Order.STATUS_SEND_TO_PROCEED:
-        basket_items = Basket.objects.filter(user=request.user)
-        basket_items.delete()
-
     return HttpResponseRedirect(reverse('order:list'))
+
+
+@receiver(pre_save, sender=OrderItem)
+@receiver(pre_save, sender=Basket)
+def product_quantity_update_save(sender, update_fields, instance, **kwargs):
+    if instance.pk:
+        instance.product.quantity -= instance.quantity - instance.get_item(instance.pk).quantity
+    else:
+        instance.product.quantity -= instance.quantity
+    instance.product.save()
+
+
+@receiver(pre_delete, sender=OrderItem)
+@receiver(pre_delete, sender=Basket)
+def product_quantity_update_delete(sender, instance, **kwargs):
+    instance.product.quantity += instance.quantity
+    instance.product.save()
+
