@@ -77,9 +77,9 @@ class ProductsFromCategoryView(ListView):
 
     def get_queryset(self, **kwargs):
         if self.kwargs['pk'] == 0:
-            return Product.objects.all().order_by('-id')
+            return Product.get_items().all().order_by('-id')
         else:
-            return Product.objects.filter(category__id=self.kwargs['pk']).order_by('-id')
+            return Product.get_items().filter(category__id=self.kwargs['pk']).order_by('-id')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

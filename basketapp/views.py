@@ -14,12 +14,10 @@ from mainapp.models import Product
 class BasketView(LoginRequiredMixin, ListView):
     model = Basket
     template_name = 'basketapp/basket.html'
+    extra_context = {'title': 'Корзина'}
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Корзина'
-        context['basket'] = Basket.objects.filter(user=self.request.user)
-        return context
+    def get_queryset(self):
+        return Basket.objects.filter(user=self.request.user)
 
 
 # @login_required

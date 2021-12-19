@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    <form class="form-horizontal" action="{% url 'auth:login' %}" method="post">
+    <form class="form-horizontal pr-30" action="{% url 'auth:login' %}" method="post">
         {% csrf_token %}
         {% if next %}
             <input type="hidden" name="next" value="{{ next }}">
@@ -12,5 +12,8 @@
         <br>
         <input class="form-control" type="submit" value="войти">
     </form>
+    <hr>
+    <a href="{% url 'auth:register' %}" class="btn btn-link">Регистрация</a><br>
+    <a href="{% url 'social:begin' 'vk-oauth2' %}?next=/" class="btn btn-link">Войти через VK</a>
 
 {% endblock %}

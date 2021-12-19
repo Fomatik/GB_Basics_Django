@@ -9,6 +9,7 @@ from adminapp.forms import ShopUserAdminEditForm, ProductCategoryEditForm, Produ
 from authapp.forms import ShopUserRegisterForm
 from authapp.models import ShopUser
 from mainapp.models import Product, ProductCategory
+from ordersapp.models import Order
 
 
 class AccessMixin:

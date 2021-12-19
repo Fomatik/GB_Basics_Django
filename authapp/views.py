@@ -1,15 +1,16 @@
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import CreateView, UpdateView
 
-from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileEditForm
 from django.contrib import auth
 from django.urls import reverse, reverse_lazy
 
-from authapp.models import ShopUser
+from authapp.models import ShopUser, ShopUserProfile
 from authapp.services import send_verify_email
 
 
@@ -87,14 +88,28 @@ class UserRegisterView(SuccessMessageMixin, CreateView):
 
 
 class UserProfileEditView(UpdateView):
-    model = ShopUser
     template_name = 'authapp/edit.html'
-    success_url = reverse_lazy('auth:edit')
-    form_class = ShopUserEditForm
-    extra_context = {'title': 'редактирование'}
+    user_form_class = ShopUserEditForm
+    profile_form_class = ShopUserProfileEditForm
 
-    def get_object(self, queryset=None):
-        return self.request.user
+    def get(self, request, **kwargs):
+        user_form = self.user_form_class(instance=request.user)
+        profile_form = self.profile_form_class(instance=request.user.shopuserprofile)
+        return render(request, self.template_name, {'user_form': user_form, 'profile_form': profile_form, 'title': 'редактирование'})
+
+    def post(self, request, **kwargs):
+        if request.method == 'POST':
+            user_form = self.user_form_class(request.POST, request.FILES, instance=request.user)
+            profile_form = self.profile_form_class(request.POST, instance=request.user.shopuserprofile)
+
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+
+            else:
+                user_form = self.user_form_class(instance=request.user)
+                profile_form = self.profile_form_class(instance=request.user.shopuserprofile)
+
+            return render(request, self.template_name, {'user_form': user_form, 'profile_form': profile_form, 'title': 'редактирование'})
 
 
 # def edit(request):
